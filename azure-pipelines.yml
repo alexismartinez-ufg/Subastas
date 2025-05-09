@@ -1,0 +1,62 @@
+# ASP.NET
+# Build and test ASP.NET projects.
+# Add steps that publish symbols, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
+
+trigger:
+- main
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+- checkout: self
+  fetchDepth: 0
+
+# Instala .NET 8 SDK
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '8.0.x'
+
+# Instala NuGet
+- task: NuGetToolInstaller@1
+
+# Restaura paquetes
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'restore'
+    projects: '$(solution)'
+
+# Preparar SonarQ
+- task: SonarCloudPrepare@3
+  inputs:
+    SonarQube: 'SonarQb'
+    organization: 'iaalexismartinez'
+    scannerMode: 'dotnet'
+    dotnetScannerVersion: '8.0.3.99785'
+    projectKey: 'iaalexismartinez_Subasta-UFG'
+    projectName: 'Subasta-UFG'
+
+# Compilar solución
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
+    projects: '$(solution)'
+    arguments: '--configuration $(buildConfiguration)'
+
+# Analizar SonarQ
+- task: SonarCloudAnalyze@3
+  inputs:
+    jdkversion: 'JAVA_HOME_17_X64'
+
+# Publicar SonarQ
+- task: SonarCloudPublish@3
+  inputs:
+    pollingTimeoutSec: '300'
+
