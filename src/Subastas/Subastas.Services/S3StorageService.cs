@@ -21,7 +21,7 @@ public class S3StorageService : IS3StorageService
         // Specify region
         _config = new AmazonS3Config
         {
-            RegionEndpoint = Amazon.RegionEndpoint.USEast1
+            RegionEndpoint = Amazon.RegionEndpoint.USEast2 // <- Ohio
         };
     }
 

@@ -12,5 +12,5 @@ public class ProductoCreateRequest
     [MaxLength(500)]
     public string DescripcionProducto { get; set; } = null!;
     [Display(Name = "Estado del producto")]
-    public bool EstaActivo { get; set; }
+    public bool EstaActivo { get; set; } = true;
 }
