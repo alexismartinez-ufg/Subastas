@@ -141,6 +141,19 @@ namespace Subastas.Services
             }
         }
 
+        public async Task<Producto> UpdateAsync(Producto productoToUpdate)
+        {
+            if (productoToUpdate == null)
+                return null;
+
+            var existing = await _productoRepository.GetByIdAsync(productoToUpdate.IdProducto);
+            if (existing == null)
+                return null;
+
+            await _productoRepository.UpdateAsync(productoToUpdate);
+            return productoToUpdate;
+        }
+
         public async Task<Producto> CreateAsync(Producto newProducto)
         {
             if (newProducto == null)
