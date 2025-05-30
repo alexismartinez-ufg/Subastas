@@ -2,27 +2,30 @@
 using Microsoft.Extensions.DependencyInjection;
 using Subastas.Dependencies;
 
-public class TestFixture
+namespace Subastas.TextFixture
 {
-    public ServiceProvider ServiceProvider { get; private set; }
-
-    public TestFixture()
+    public class TestFixture
     {
-        var services = new ServiceCollection();
+        public ServiceProvider ServiceProvider { get; private set; }
 
-        // Cargar la configuración
-        var configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json")
-            .AddUserSecrets<TestFixture>()
-            .Build();
+        public TestFixture()
+        {
+            var services = new ServiceCollection();
 
-        services.ConfigureServices(configuration);
+            // Cargar la configuración
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .AddUserSecrets<TestFixture>()
+                .Build();
 
-        // Se utiliza unicamente para los proyectos de Test, no para el proyecto web
-        // Ya que lo hace el propio proyecto
-        services.AddSingleton((IConfiguration)configuration);
+            services.ConfigureServices(configuration, testingBuilder: true);
 
-        ServiceProvider = services.BuildServiceProvider();
+            // Se utiliza unicamente para los proyectos de Test, no para el proyecto web
+            // Ya que lo hace el propio proyecto
+            services.AddSingleton((IConfiguration)configuration);
+
+            ServiceProvider = services.BuildServiceProvider();
+        }
     }
 }

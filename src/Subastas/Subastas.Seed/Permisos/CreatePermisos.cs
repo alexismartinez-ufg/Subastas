@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Subastas.Domain;
 using Subastas.Interfaces;
+using Subastas.TextFixture;
 
 namespace Subastas.Seed.Permisos
 {
