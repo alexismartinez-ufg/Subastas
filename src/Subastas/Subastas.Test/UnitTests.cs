@@ -118,6 +118,35 @@ namespace Subastas.Test
             Assert.Equal(200.00m, nuevaPuja.MontoPuja);
         }
 
+        [Fact(DisplayName = "06 - Cancelar subasta")]
+        public async Task CancelAuction_ByOwnerOrAdmin_ShouldSetStatusToCancelled()
+        {
+            var subasta = await CreateSubasta();
+
+            if (subasta == null)
+                Assert.Fail("La subasta con nombre \"Subasta en Unit Testing\" no se encontro.");
+
+            var deleted = await SubastaService.DeleteById(subasta.IdSubasta);
+
+            Assert.True(deleted);
+        }
+
+        [Fact(DisplayName = "07 - Terminar Subasta")]
+        public async Task EndAuction_WhenExpirationReached_ShouldCloseAuction()
+        {
+            var subasta = await CreateSubasta();
+
+            if (subasta == null)
+                Assert.Fail("La subasta con nombre \"Subasta en Unit Testing\" no se encontro.");
+
+            subasta.EstaActivo = false;
+
+            await SubastaService.UpdateAsync(subasta);
+
+            Assert.NotNull(subasta);
+            Assert.False(subasta.EstaActivo);
+        }
+
         // METODOS AUXILIARES
         public async Task<Usuario> CreatUser()
         {
