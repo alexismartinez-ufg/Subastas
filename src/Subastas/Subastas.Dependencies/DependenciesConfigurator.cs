@@ -13,11 +13,19 @@ namespace Subastas.Dependencies
 {
     public static class DependenciesConfigurator
     {
-        public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration configuration, bool testingBuilder = false)
         {
             // Configurar el contexto de base de datos con la cadena de conexión real
-            services.AddDbContext<SubastasContext>(options =>
+            if (testingBuilder)
+            {
+                services.AddDbContext<SubastasContext>(options =>
+                options.UseInMemoryDatabase(databaseName: "UnitTestingDB"));
+            }
+            else
+            {
+                services.AddDbContext<SubastasContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("SubastasConnectionString")));
+            }
 
             // Configurar tus servicios aquí
             services.AddScoped<IUserService, UsersService>();
