@@ -49,7 +49,7 @@ steps:
   displayName: 'Ejecutar pruebas unitarias con cobertura'
   inputs:
     command: 'test'
-    projects: '$(solution)/Subastas.Test/Subastas.Test.csproj'
+    projects: 'Subastas.Test/Subastas.Test.csproj'
     arguments: '--collect:"XPlat Code Coverage"'
     testRunTitle: 'Unit Test'
 
