@@ -65,3 +65,4 @@ steps:
   displayName: 'Publicar resultados SonarCloud'
   inputs:
     pollingTimeoutSec: '300'
+    failWhenQualityGateFails: true 
