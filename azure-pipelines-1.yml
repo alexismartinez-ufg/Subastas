@@ -26,6 +26,13 @@ steps:
     command: 'restore'
     projects: '$(solution)'
 
+# Ejecutar pruebas unitarias
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
+    projects: '$(solution)/Subastas.Test/Subastas.Test.csproj'
+    testRunTitle: 'Unit Test'
+
 # Preparar análisis con SonarCloud
 - task: SonarCloudPrepare@3
   displayName: 'Preparar análisis con SonarCloud'
