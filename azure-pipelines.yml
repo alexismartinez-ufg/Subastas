@@ -61,7 +61,7 @@ steps:
       $ErrorActionPreference = "Stop"
       Remove-Module Microsoft.PowerShell.Security -ErrorAction SilentlyContinue
       $PSVersionTable
-    pwsh: false
+    pwsh: true
 
 # Ejecutar prueba de carga con JMeter
 - task: PowerShell@2
@@ -72,7 +72,7 @@ steps:
       $ErrorActionPreference = "Stop"
       Remove-Module Microsoft.PowerShell.Security -ErrorAction SilentlyContinue
       & "$(jmeterPathVal)" -n -t "$(jmxFileVal)"
-    pwsh: false
+    pwsh: true
 
 # Analizar con SonarCloud
 - task: SonarCloudAnalyze@3
