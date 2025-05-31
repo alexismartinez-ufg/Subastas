@@ -50,7 +50,7 @@ steps:
   inputs:
     command: 'test'
     projects: 'src/Subastas/Subastas.Test/Subastas.Test.csproj'
-    arguments: '--collect:"XPlat Code Coverage"'
+    arguments: '--no-restore --no-build --collect:"XPlat Code Coverage"'
     testRunTitle: 'Unit Test'
 
 - task: PowerShell@2
@@ -59,6 +59,7 @@ steps:
     targetType: 'inline'
     script: |
       $PSVersionTable
+    pwsh: false
 
 # Ejecutar prueba de carga con JMeter
 - task: PowerShell@2
