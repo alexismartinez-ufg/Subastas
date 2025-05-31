@@ -5,6 +5,7 @@ pool:
   name: Default  # Agente auto-hospedado (tu laptop)
 
 variables:
+  AZP_AGENT_CLEANUP_PSMODULES_IN_POWERSHELL: true
   solution: '**/*.sln'
   buildConfiguration: 'Release'
 
