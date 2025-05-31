@@ -50,7 +50,7 @@ steps:
   inputs:
     command: 'test'
     projects: 'src/Subastas/Subastas.Test/Subastas.Test.csproj'
-    arguments: '--no-restore --no-build --collect:"XPlat Code Coverage"'
+    arguments: '--collect:"XPlat Code Coverage"'
     testRunTitle: 'Unit Test'
 
 - task: PowerShell@2
