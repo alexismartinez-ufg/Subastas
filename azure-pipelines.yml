@@ -7,8 +7,6 @@ pool:
 variables:
   solution: '**/*.sln'
   buildConfiguration: 'Release'
-  jmeterPath: '$(jmeterPahVal)'
-  jmxFile: '$(jmxFileVal)'
 
 steps:
 # Restaurar código del repositorio
@@ -54,15 +52,22 @@ steps:
     projects: 'src/Subastas/Subastas.Test/Subastas.Test.csproj'
     arguments: '--collect:"XPlat Code Coverage"'
     testRunTitle: 'Unit Test'
-    
+
+- task: PowerShell@2
+  displayName: 'Verificar versión de PowerShell'
+  inputs:
+    targetType: 'inline'
+    script: |
+      $PSVersionTable
+
 # Ejecutar prueba de carga con JMeter
 - task: PowerShell@2
   displayName: 'Ejecutar prueba de carga con JMeter'
   inputs:
     targetType: 'inline'
     script: |
-      & "$(jmeterPath)" -n `
-      -t "$(jmxFile)"
+      & "$(jmeterPathVal)" -n -t "$(jmxFileVal)"
+    pwsh: false
 
 # Analizar con SonarCloud
 - task: SonarCloudAnalyze@3
