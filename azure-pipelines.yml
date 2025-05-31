@@ -50,7 +50,7 @@ steps:
   inputs:
     command: 'test'
     projects: 'src/Subastas/Subastas.Test/Subastas.Test.csproj'
-    arguments: '--collect:"XPlat Code Coverage"'
+    arguments: '--no-build --no-restore --configuration Release --collect:"XPlat Code Coverage"'
     testRunTitle: 'Unit Test'
 
 - task: PowerShell@2
@@ -58,6 +58,8 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
+      $ErrorActionPreference = "Stop"
+      Remove-Module Microsoft.PowerShell.Security -ErrorAction SilentlyContinue
       $PSVersionTable
     pwsh: false
 
@@ -67,6 +69,8 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
+      $ErrorActionPreference = "Stop"
+      Remove-Module Microsoft.PowerShell.Security -ErrorAction SilentlyContinue
       & "$(jmeterPathVal)" -n -t "$(jmxFileVal)"
     pwsh: false
 
