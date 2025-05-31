@@ -7,8 +7,8 @@ pool:
 variables:
   solution: '**/*.sln'
   buildConfiguration: 'Release'
-  jmeterPath: '$(jmeterPah)'
-  jmxFile: '$(jmxFile)'
+  jmeterPath: '$(jmeterPahVal)'
+  jmxFile: '$(jmxFileVal)'
 
 steps:
 # Restaurar código del repositorio
