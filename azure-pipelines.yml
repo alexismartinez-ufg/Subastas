@@ -54,6 +54,7 @@ steps:
     arguments: '--no-build --no-restore --configuration Release --collect:"XPlat Code Coverage"'
     testRunTitle: 'Unit Test'
 
+#Verificación de versión de PowerShell
 - task: PowerShell@2
   displayName: 'Verificar versión de PowerShell'
   inputs:
@@ -63,6 +64,15 @@ steps:
       Remove-Module Microsoft.PowerShell.Security -ErrorAction SilentlyContinue
       $PSVersionTable
     pwsh: true
+
+#Pre ejecución de pruebas de Jmter
+- task: PowerShell@2
+  displayName: 'Pre ejecución de pruebas de JMeter - Limpiar pujas'
+  inputs:
+    targetType: 'filePath'
+    filePath: '$(CleanJmterScript)'
+    pwsh: true
+
 
 # Ejecutar prueba de carga con JMeter
 - task: PowerShell@2
