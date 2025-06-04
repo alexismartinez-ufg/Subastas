@@ -20,7 +20,12 @@ steps:
   displayName: 'Actualizar repositorio'
 
 - script: |
+    echo "Copiando archivo de configuración de producción..."
+    copy "$(ProdSettingsPath)" src\subastas\subastas\appsettings.Production.json
+  displayName: 'Copiar configuración producción'
+
+- script: |
     echo "Construyendo y levantando contenedores Docker..."
-    cd src/subastas 
+    cd src\subastas
     docker compose up -d --build
   displayName: 'Ejecutar docker compose'
