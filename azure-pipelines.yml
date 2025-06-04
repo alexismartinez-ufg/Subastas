@@ -114,7 +114,7 @@ steps:
     targetType: 'inline'
     script: |
       $ErrorActionPreference = "Stop"
-      & "java -Xmx512m -jar $(OwaspZapPath)" -cmd -quickurl http://localhost -quickout "$(OwaspResultPath)\Subastas-zap-report.html"
+      java -Xmx512m -jar $(OwaspZapPath) -cmd -quickurl http://localhost -quickout "$(OwaspResultPath)\Subastas-zap-report.html"
     pwsh: true
 
 # Publicar artefactos de resultados OWASP
