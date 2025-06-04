@@ -7,6 +7,9 @@ name: Deploy to Dev
 pool:
   name: Default  # o el agente que tengas con docker
 
+variables:
+  AZP_AGENT_CLEANUP_PSMODULES_IN_POWERSHELL: true
+
 steps:
 - checkout: self
   fetchDepth: 0  # Para obtener todo el historial, si necesitas
