@@ -1,10 +1,25 @@
-
 services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - SA_PASSWORD=sql123!sa
+      - ACCEPT_EULA=Y
+    ports:
+      - 1433:1433
+    volumes:
+      - sql_data:/var/opt/mssql
+
   server:
     build:
       context: .
       target: final
     ports:
       - 8083:8080
-    env_file:
-      - .env
+    volumes:
+      # Inyectar configuración sin subirla al repo
+      - ./Subastas/appsettings.Production.json:/app/appsettings.Production.json
+    depends_on:
+      - db
+
+volumes:
+  sql_data:

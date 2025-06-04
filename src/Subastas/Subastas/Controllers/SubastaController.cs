@@ -1,21 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ClosedXML.Excel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 using Subasta.Managers;
 using Subastas.Interfaces;
 using Subastas.Interfaces.Services;
 using System.Data.Common;
-using Microsoft.AspNetCore.Http;
-using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Drawing.Charts;
-using Newtonsoft.Json;
-using static Amazon.Runtime.Internal.Settings.SettingsCollection;
-using System.Drawing.Printing;
 using System.Text;
-using Subastas.Services;
-using Subastas.Domain;
-using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace Subastas.Controllers
 {

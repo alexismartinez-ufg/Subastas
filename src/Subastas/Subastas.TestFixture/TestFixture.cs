@@ -19,7 +19,7 @@ namespace Subastas.TextFixture
                 .AddUserSecrets<TestFixture>()
                 .Build();
 
-            services.ConfigureServices(configuration, testingBuilder: true);
+            services.ConfigureServices(configuration, testingBuilder: false);
 
             // Se utiliza unicamente para los proyectos de Test, no para el proyecto web
             // Ya que lo hace el propio proyecto

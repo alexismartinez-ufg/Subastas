@@ -4,24 +4,111 @@ using Subastas.Interfaces;
 using Subastas.TextFixture;
 using System.Collections.ObjectModel;
 
-namespace Subastas.Seed.Users
+namespace Subastas.Seed
 {
-    public class CreateUsers : IClassFixture<TestFixture>
+    public class DataSeed(TestFixture fixture) : IClassFixture<TestFixture>
     {
-        private readonly IUserService userService;
-        private readonly IRolService rolService;
-        private readonly IEncryptionService encrypManager;
+        private readonly IMenuService menuService = fixture.ServiceProvider.GetRequiredService<IMenuService>();
+        private readonly IPermisoService permisoService = fixture.ServiceProvider.GetRequiredService<IPermisoService>();
+        private readonly IRolService rolService = fixture.ServiceProvider.GetRequiredService<IRolService>();
+        private readonly IUserService userService = fixture.ServiceProvider.GetRequiredService<IUserService>();
+        private readonly IEncryptionService encrypManager = fixture.ServiceProvider.GetRequiredService<IEncryptionService>();
 
-        public CreateUsers(TestFixture fixture)
+        [Fact(DisplayName = "Init Data Seeder")]
+        public async Task Init()
         {
-            rolService = fixture.ServiceProvider.GetService<IRolService>();
-            userService = fixture.ServiceProvider.GetService<IUserService>();
-            encrypManager = fixture.ServiceProvider.GetService<IEncryptionService>();
-        }
 
-        [Fact]
-        public async Task CreateAdminUsersSeed()
-        {
+            var Menus = new List<Menu>()
+            {
+                await menuService.CreateIfNotExistsAsync(new Menu
+                {
+                    EstaActivo = true,
+                    NombreMenu = "Authentication",
+                }),
+                await menuService.CreateIfNotExistsAsync(new Menu
+                {
+                    EstaActivo = true,
+                    NombreMenu = "Subastas"
+                })
+            };
+
+            Assert.True(Menus.Any() && Menus.Count == 2);
+
+            var permisos = new List<Permiso>()
+            {
+                await permisoService.CreateIfNotExistsAsync(new Permiso
+                {
+                    EstaActivo = true,
+                    NombrePermiso = "Login",
+                    IdMenuNavigation = await menuService.GetByNameAsync("Authentication")
+                }),
+                await permisoService.CreateIfNotExistsAsync(new Permiso
+                {
+                    EstaActivo = true,
+                    NombrePermiso = "Logout",
+                    IdMenuNavigation = await menuService.GetByNameAsync("Authentication")
+
+                }),
+                await permisoService.CreateIfNotExistsAsync(new Permiso
+                {
+                    EstaActivo = true,
+                    NombrePermiso = "Create_Subastas",
+                    IdMenuNavigation = await menuService.GetByNameAsync("Subastas")
+                }),
+                await permisoService.CreateIfNotExistsAsync(new Permiso
+                {
+                    EstaActivo = true,
+                    NombrePermiso = "Add_Subastas",
+                    IdMenuNavigation = await menuService.GetByNameAsync("Subastas")
+                }),
+                await permisoService.CreateIfNotExistsAsync(new Permiso
+                {
+                    EstaActivo = true,
+                    NombrePermiso = "Edit_Subastas",
+                    IdMenuNavigation = await menuService.GetByNameAsync("Subastas")
+                }),
+                await permisoService.CreateIfNotExistsAsync(new Permiso
+                {
+                    EstaActivo = true,
+                    NombrePermiso = "Delete_Subastas",
+                    IdMenuNavigation = await menuService.GetByNameAsync("Subastas")
+                })
+            };
+
+            Assert.True(permisos.Any() && permisos.Count == 6);
+
+            var admin = await rolService.CreateIfNotExistsAsync(new Role
+            {
+                EstaActivo = true,
+                NombreRol = "Admin",
+                RolPermisos = (await permisoService.GetAllAsync()).Select(p => new RolPermiso
+                {
+                    IdPermiso = p.IdPermiso,
+                    EstaActivo = true
+                }).ToList()
+            });
+
+            var user = await rolService.CreateIfNotExistsAsync(new Role
+            {
+                EstaActivo = true,
+                NombreRol = "User",
+                RolPermisos = new Collection<RolPermiso>
+                {
+                    new RolPermiso
+                    {
+                        IdPermiso = (await permisoService.GetByNameAsync("Login")).IdPermiso
+                    },
+                    new RolPermiso
+                    {
+                        IdPermiso = (await permisoService.GetByNameAsync("Logout")).IdPermiso
+                    }
+                }
+            });
+
+            var roles = new Role[] { admin, user };
+
+            Assert.True(roles.Any() && roles.Length == 2);
+
             var adminRole = await rolService.GetByNameAsync("Admin");
 
             var Alexis = await userService.CreateIfNotExistsAsync(new Usuario
@@ -131,11 +218,7 @@ namespace Subastas.Seed.Users
             });
 
             Assert.True(Alexis != null && Alfredo != null && Chiristian != null && Caleb != null && Oscar != null);
-        }
 
-        [Fact]
-        public async Task CreateUsersSeed()
-        {
             var usuario = await rolService.GetByNameAsync("User");
 
             var usuario1 = await userService.CreateIfNotExistsAsync(new Usuario
