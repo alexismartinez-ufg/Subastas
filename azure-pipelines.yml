@@ -82,7 +82,15 @@ steps:
     script: |
       $ErrorActionPreference = "Stop"
       Remove-Module Microsoft.PowerShell.Security -ErrorAction SilentlyContinue
-      & "$(jmeterPathVal)" -n -t "$(jmxFileVal)" -l "$(OwaspResultPath)\resultados.jtl" -e -o "$(OwaspResultPath)"
+      
+      $reportFolder = "$(OwaspResultPath)\Jmeter"
+
+      # Borrar carpeta si existe
+      if (Test-Path $reportFolder) {
+          Remove-Item -Recurse -Force $reportFolder
+      }
+
+      & "$(jmeterPathVal)" -n -t "$(jmxFileVal)" -l "$(OwaspResultPath)\Jmeter\resultados.jtl" -e -o "$(OwaspResultPath)\Jmeter"
     pwsh: true
 
 # Analizar con SonarCloud
