@@ -82,7 +82,7 @@ steps:
     script: |
       $ErrorActionPreference = "Stop"
       Remove-Module Microsoft.PowerShell.Security -ErrorAction SilentlyContinue
-      & "$(jmeterPathVal)" -n -t "$(jmxFileVal)"
+      & "$(jmeterPathVal)" -n -t "$(jmxFileVal)" -l "$(OwaspResultPath)\resultados.jtl" -e -o "$(OwaspResultPath)"
     pwsh: true
 
 # Analizar con SonarCloud
