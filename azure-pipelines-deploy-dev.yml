@@ -1,0 +1,23 @@
+trigger: none  # No se ejecuta automáticamente
+
+pr: none  # No se ejecuta en PRs
+
+name: Deploy to Dev
+
+pool:
+  name: Default  # o el agente que tengas con docker
+
+steps:
+- checkout: self
+  fetchDepth: 0  # Para obtener todo el historial, si necesitas
+
+- script: |
+    echo "Actualizando repositorio local..."
+    git pull origin main
+  displayName: 'Actualizar repositorio'
+
+- script: |
+    echo "Construyendo y levantando contenedores Docker..."
+    cd src/subastas 
+    docker compose up -d --build
+  displayName: 'Ejecutar docker compose'
