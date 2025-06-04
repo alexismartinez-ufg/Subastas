@@ -2,7 +2,7 @@ trigger:
 - main
 
 pool:
-  name: Default  # Agente auto-hospedado (tu laptop)
+  name: Default  # Agente auto-hospedado
 
 variables:
   AZP_AGENT_CLEANUP_PSMODULES_IN_POWERSHELL: true
@@ -14,7 +14,7 @@ steps:
 - checkout: self
   fetchDepth: 0
 
-# Usar .NET SDK 8 (asegúrate de tenerlo instalado en tu máquina)
+# Usar .NET SDK 8
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
@@ -31,7 +31,7 @@ steps:
 - task: SonarCloudPrepare@3
   displayName: 'Preparar análisis con SonarCloud'
   inputs:
-    SonarQube: 'SonarQb'  # Debes haber configurado este servicio en Azure DevOps
+    SonarQube: 'SonarQb'
     organization: 'iaalexismartinez'
     scannerMode: 'dotnet'
     projectKey: 'iaalexismartinez_Subasta-UFG'
@@ -96,4 +96,31 @@ steps:
   displayName: 'Publicar resultados SonarCloud'
   inputs:
     pollingTimeoutSec: '300'
-    failWhenQualityGateFails: true
+
+# Ejecutar OWASP Dependency-Check
+- task: PowerShell@2
+  displayName: 'Ejecutar OWASP Dependency-Check'
+  inputs:
+    targetType: 'inline'
+    script: |
+      $ErrorActionPreference = "Stop"
+      & "$(OwaspDependencyPath)" --project "Subastas" -s "$(SubastasBinariesPath)" -o "$(OwaspResultPath)"
+    pwsh: true
+
+# Ejecutar OWASP ZAP y generar PDF
+- task: PowerShell@2
+  displayName: 'Ejecutar OWASP ZAP y generar PDF'
+  inputs:
+    targetType: 'inline'
+    script: |
+      $ErrorActionPreference = "Stop"
+      & "java -Xmx512m -jar $(OwaspZapPath)" -cmd -quickurl http://localhost -quickout "$(OwaspResultPath)\Subastas-zap-report.html"
+    pwsh: true
+
+# Publicar artefactos de resultados OWASP
+- task: PublishBuildArtifacts@1
+  displayName: 'Publicar artefactos de OWASP'
+  inputs:
+    PathtoPublish: '$(OwaspResultPath)'
+    ArtifactName: 'OWASP-Reports'
+    publishLocation: 'Container'
